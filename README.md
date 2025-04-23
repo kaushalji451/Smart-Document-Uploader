@@ -1,4 +1,4 @@
-# Incometax calculator api
+# Smart  Document Uploader with OCR
 
 this is a Smart Document Upload with OCR Project where the user can upload his gverment document like addhar cardand pan card then the image text is converted to text and autofilled in the input field also if user want to modify the input filed it can also do that.
 
