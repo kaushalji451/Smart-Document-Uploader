@@ -26,10 +26,13 @@ cloudinary.config({  //cloudnery configeraton
 router.post("/upload", upload.single("image"), async (req, res) => {
   // id type from req query
     const {idType} = req.query;
-    
+    console.log(idType);
     if (!idType || !["AadharCard", "PanCard"].includes(idType)) {
      return res.status(400).json({ message: "Invalid or missing idType" });
    }
+   if (!req.file) {
+    return res.status(400).json({ message: "No image file uploaded" });
+  }
    
      try {
        const bufferStream = new Readable();
@@ -52,7 +55,6 @@ router.post("/upload", upload.single("image"), async (req, res) => {
    
        const result = await streamUpload();
        const ImageResult = await OcrImage(result.secure_url); // converting the image to text
-   
        if (!ImageResult || ImageResult.trim() === "") {
          return res.status(400).json({ message: "OCR failed or returned empty text" });
        }
@@ -81,6 +83,7 @@ router.post("/upload", upload.single("image"), async (req, res) => {
   //  post data to datbase
    router.post("/kycDocument",ValidDateDocument,(req,res)=>{
      const data = req.body;
+     console.log(data);
      const result = new Document(data);
      result.save()
        .then(() => {
