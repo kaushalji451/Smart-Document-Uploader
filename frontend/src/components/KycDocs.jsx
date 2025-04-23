@@ -23,7 +23,7 @@ const KycDocs = () => {
 
     try {
       const res = await axios.post(
-        `http://localhost:8080/upload?idType=${idType}`,
+        `${import.meta.env.VITE_API_BASE_URL}/upload?idType=${idType}`,
         formData
       );
 
@@ -60,7 +60,7 @@ const KycDocs = () => {
   let handleSubmit = async (e) => {
     e.preventDefault();
     const response = await axios.post(
-      "http://localhost:8080/kycDocument",
+      `${import.meta.env.VITE_API_BASE_URL}/kycDocument`,
       formData
     );
     if (response.data.message === "Document saved successfully") {
