@@ -11,17 +11,20 @@ function AddharTextToJson(ImageResult) {
   let id_number = "";
 
   const dobRegex = /(?:DOB[:\s]*|Date of Birth[:\s]*)?(\d{2}[\/\-\.]\d{2}[\/\-\.]\d{4})/i;
-  const aadharRegex = /\b\d{4}\s\d{4}\s\d{4}\b/;
-  const genderRegex = /\b(male|female|transgender)\b/i;
+  const aadharRegex = /(?:\b\d{4}[\s\-]?\d{4}[\s\-]?\d{4}\b)/g;
+  const genderRegex = /\b(male|female|transgender|m|f|others)\b/i;
+
+  // Join all lines to ensure multiline Aadhar numbers are detected
+  const allText = lines.join(' ');
+
+  // Try to extract Aadhar number first from the whole text
+  const aadharMatch = allText.match(aadharRegex);
+  if (aadharMatch && aadharMatch.length > 0) {
+    id_number = aadharMatch[0].replace(/\D/g, ''); // remove spaces/hyphens
+  }
 
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i];
-
-    // Aadhar number
-    if (!id_number && aadharRegex.test(line)) {
-      id_number = line.match(aadharRegex)[0].replace(/\s+/g, '');
-      continue;
-    }
 
     // Date of birth
     if (!dob && dobRegex.test(line)) {
@@ -31,11 +34,12 @@ function AddharTextToJson(ImageResult) {
 
     // Gender
     if (!gender && genderRegex.test(line)) {
-      gender = genderRegex.exec(line)[0];
+      const rawGender = genderRegex.exec(line)[0].toLowerCase();
+      gender = rawGender === 'm' ? 'male' : rawGender === 'f' ? 'female' : rawGender;
       continue;
     }
 
-    // Name (skip known labels or government headers)
+    // Name
     if (
       !name &&
       !line.toLowerCase().includes("gov") &&

@@ -59,15 +59,7 @@ const KycDocs = () => {
 
   let handleSubmit = async (e) => {
     e.preventDefault();
-    const response = await axios.post(
-      `${import.meta.env.VITE_API_BASE_URL}/kycDocument`,
-      formData
-    );
-    if (response.data.message === "Document saved successfully") {
       toast("Document added successfully");
-    } else {
-      toast("Document not added successfully");
-    }
     setformData({
       name: "",
       idNumber: "",
