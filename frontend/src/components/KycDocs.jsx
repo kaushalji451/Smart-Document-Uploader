@@ -2,10 +2,12 @@ import React from "react";
 import { useState } from "react";
 import axios from "axios";
 import { ToastContainer, Bounce, toast } from "react-toastify";
+import { createWorker } from "tesseract.js";
 const KycDocs = () => {
   const [file, setfile] = useState(null); // for uploaded file
   const [idType, setidType] = useState(null); // for id type
-  const [formData, setformData] = useState({ // for formData
+  const [formData, setformData] = useState({
+    // for formData
     name: "",
     idNumber: "",
     dob: "",
@@ -14,8 +16,9 @@ const KycDocs = () => {
     fathername: "",
   });
   const [loading, setLoading] = useState(false); // laoding state
- 
-  const handleUpload = async (e) => {   // handleing the upload
+
+  const handleUpload = async (e) => {
+    // handleing the upload
     e.preventDefault();
     setLoading(true);
     const formData = new FormData();
@@ -29,10 +32,10 @@ const KycDocs = () => {
 
       const inputDate = res.data.data.dob; // dd/MM/yyyy
       const [day, month, year] = inputDate.split("/");
-      const formattedDate = `${year}-${month}-${day}`;   //YYY/MM/DD
+      const formattedDate = `${year}-${month}-${day}`; //YYY/MM/DD
       setformData({
         ...formData,
-        name: res.data.data.name, 
+        name: res.data.data.name,
         idNumber: res.data.data.id_number,
         dob: formattedDate,
         gender: res.data?.data?.gender ?? "",
@@ -42,7 +45,7 @@ const KycDocs = () => {
       toast("File added successfully");
       window.scrollTo({
         top: 500, // scrolls to 500px from the top
-        behavior: "smooth" // adds smooth scrolling effect
+        behavior: "smooth", // adds smooth scrolling effect
       });
     } catch (error) {
       console.error(error);
@@ -59,7 +62,7 @@ const KycDocs = () => {
 
   let handleSubmit = async (e) => {
     e.preventDefault();
-      toast("Document added successfully");
+    toast("Document added successfully");
     setformData({
       name: "",
       idNumber: "",
@@ -164,7 +167,7 @@ const KycDocs = () => {
           )}
 
           <h1 className="py-6 text-xl  text-[#f8b3ac] text-center">
-            Or Inter Details  By Your Self
+            Or Inter Details By Your Self
           </h1>
           {/* maual docs */}
           <form className="text-[#f8b3ac]" onSubmit={handleSubmit}>

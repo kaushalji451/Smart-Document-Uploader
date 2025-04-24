@@ -33,10 +33,6 @@ and for pan card
   "id_number": 'DGlPK3650P'
 }
 
-    Get - /kycDocument
-    Description - it save the user information into the database and send a success or failior message based on condition it saved on database or not
-
-
 # Details about OCR
  for this project i use the OCR.space this is a freemium api that can provid the api to convert the image into text if we talk about free package the it provid the 25000 req/month;
 
