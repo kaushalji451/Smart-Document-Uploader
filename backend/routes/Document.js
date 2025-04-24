@@ -9,7 +9,7 @@ const { Readable } = require("stream");
 const AddharTextToJson = require("../function/AddharJson"); // addhar image text to json
 const PanTextToJson = require("../function/PanJson"); // pan image text to json
 const compressImage = require("../function/compressimage");
-
+const deleteImage  = require("../function/destroyImage");
 const upload = multer();
 
 // cloudniry config
@@ -75,6 +75,8 @@ router.post("/upload", upload.single("image"), async (req, res) => {
     } else {
       return res.status(400).json({ message: "idType not supported" });
     }
+
+    await deleteImage(result.secure_url);
 
     console.log("Extracted JSON:", Data);
   } catch (error) {
