@@ -2,10 +2,12 @@ import React from "react";
 import { useState } from "react";
 import axios from "axios";
 import { ToastContainer, Bounce, toast } from "react-toastify";
-import { createWorker } from "tesseract.js";
+
 const KycDocs = () => {
-  const [file, setfile] = useState(null); // for uploaded file
-  const [idType, setidType] = useState(null); // for id type
+  const [aadharFront, setAadharFront] = useState(null);
+  const [aadharBack, setAadharBack] = useState(null);
+  const [panCard, setpanCard] = useState(null); // corrected initialization
+  const [idType, setidType] = useState(""); // for id type
   const [formData, setformData] = useState({
     // for formData
     name: "",
@@ -21,18 +23,39 @@ const KycDocs = () => {
     // handleing the upload
     e.preventDefault();
     setLoading(true);
-    const formData = new FormData();
-    formData.append("image", file);
+    const AddharformData = new FormData();
+    AddharformData.append("image", aadharFront);
+    AddharformData.append("image", aadharBack);
 
+    const panformData = new FormData();
+    panformData.append("image", panCard);
+    let res;
     try {
-      const res = await axios.post(
-        `${import.meta.env.VITE_API_BASE_URL}/upload?idType=${idType}`,
-        formData
-      );
+      if(idType === "AadharCard") {
+         res = await axios.post(
+          `${import.meta.env.VITE_API_BASE_URL}/AddharUpload?idType=${idType}`,
+          AddharformData, {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
+      }
+      if(idType === "PanCard") {
+         res = await axios.post(
+          `${import.meta.env.VITE_API_BASE_URL}/PanUpload/?idType=${idType}`,
+          panformData, {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
+      }
 
       const inputDate = res.data.data.dob; // dd/MM/yyyy
       const [day, month, year] = inputDate.split("/");
       const formattedDate = `${year}-${month}-${day}`; //YYY/MM/DD
+
       setformData({
         ...formData,
         name: res.data.data.name,
@@ -124,17 +147,64 @@ const KycDocs = () => {
             </div>
 
             <div className="min-lg:w-1/2 w-full pb-4 flex flex-col gap-2">
+            {idType === "" && (
+              <div className="flex flex-col gap-2">
               <label htmlFor="name" className="text-lg">
-                your document
+                Id Image
               </label>
               <input
                 type="file"
                 className="border-t border-b border-[#f8b3ac] text-xl text-[#f8b3ac] w-full py-4 rounded-xl px-6"
-                onChange={(e) => {
-                  setfile(e.target.files[0]);
-                }}
                 required
               />
+            </div>
+            )}
+            {idType === "PanCard" && (
+               <div className="flex flex-col gap-2">
+               <label htmlFor="name" className="text-lg">
+                 Pan Card
+               </label>
+               <input
+                 type="file"
+                 className="border-t border-b border-[#f8b3ac] text-xl text-[#f8b3ac] w-full py-4 rounded-xl px-6"
+                 onChange={(e) => {
+                   setpanCard(e.target.files[0]);
+                 }}
+                 required
+               />
+             </div>
+            )}
+              {idType === "AadharCard" && (
+                <div className="flex gap-5 max-lg:flex-col">
+                <div className="flex flex-col gap-2">
+                  <label htmlFor="name" className="text-lg">
+                    Addhar Front
+                  </label>
+                  <input
+                    type="file"
+                    className="border-t border-b border-[#f8b3ac] text-xl text-[#f8b3ac] w-full py-4 rounded-xl px-6"
+                    onChange={(e) => {
+                      setAadharFront(e.target.files[0]);
+                    }}
+                    required
+                  />
+                </div>
+                {/* addhar back */}
+                <div className="flex flex-col gap-2">
+                  <label htmlFor="name" className="text-lg">
+                    Addhar Back
+                  </label>
+                  <input
+                    type="file"
+                    className="border-t border-b border-[#f8b3ac] text-xl text-[#f8b3ac] w-full py-4 rounded-xl px-6"
+                    onChange={(e) => {
+                      setAadharBack(e.target.files[0]);
+                    }}
+                    required
+                  />
+                </div>
+              </div>
+              )}
             </div>
             <button className="bg-[#312f5d] h-13 text-[#f8b3ac] text-xl px-10 rounded-xl">
               Submit
