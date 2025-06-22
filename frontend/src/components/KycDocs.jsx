@@ -95,6 +95,7 @@ const KycDocs = () => {
       fathername: "",
     });
   };
+
   return (
     <>
       <ToastContainer
